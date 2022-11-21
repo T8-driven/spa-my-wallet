@@ -9,6 +9,7 @@ import { findAllTransactions } from "../services/transactions";
 export default function Home() {
   const [user, setUser] = useState({});
   const [transactions, setTransactions] = useState([]);
+  const [totalBalance, setTotalBalance] = useState(0);
   const { jwt, setJwt } = useContext(AuthContext);
   const { refresh } = useContext(RefreshContext);
 
@@ -32,6 +33,17 @@ export default function Home() {
     }
     setUser(res.data.user);
     setTransactions(res.data.transactions);
+
+    let total = 0;
+    res.data.transactions.forEach((transaction) => {
+      if (transaction.type === "entrada") {
+        total += Number(transaction.value);
+      } else {
+        total -= Number(transaction.value);
+      }
+    });
+
+    setTotalBalance(total);
   }
 
   function signOut() {
@@ -67,6 +79,10 @@ export default function Home() {
               </li>
             ))}
           </ul>
+          <article>
+            <span>Saldo</span>
+            <span>R$ {totalBalance}</span>
+          </article>
         </Transactions>
         <section>
           <Button onClick={() => newTransaction("entrada")}>
@@ -128,14 +144,25 @@ const Transactions = styled.article`
   border-radius: 0.3rem;
   padding: 1rem;
 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
   ul li {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: .5rem;
   }
   ul li div span {
-    color: #cccC6C6C6;
-    margin-right: .7rem;
+    color: #c6c6c6;
+    margin-right: 0.7rem;
+  }
+
+  article{
+    font-size: 1.3rem;
+    display: flex;
+    justify-content: space-between;
   }
 `;
 
