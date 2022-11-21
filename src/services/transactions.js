@@ -2,14 +2,14 @@ import axios from "axios";
 
 const BASE_URL = "http://localhost:5000";
 
-export function createTransactions(body, type, jwt) {
+export function createTransaction(body, type, jwt) {
   const transaction = {
     ...body,
     type,
   };
 
   const response = axios
-    .post(`${BASE_URL}/post`, transaction, {
+    .post(`${BASE_URL}/transactions`, transaction, {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
